@@ -15,8 +15,9 @@ const addListener = (socket:Socket) => {
 
     const serverStatusLabel = document.querySelector<HTMLSpanElement>('#server-status')!;
     const clientsUL = document.querySelector('#clients-ul')!;
-    // TODO: clients-ul
-
+    
+    const messageForm = document.querySelector<HTMLFormElement>('#message-form')!;
+    const messageInput = document.querySelector<HTMLInputElement>('#message-input')!;
 
     // on:Para escuchar, emit:Para enviar
     socket.on('connect', () => {
@@ -37,6 +38,15 @@ const addListener = (socket:Socket) => {
         });
         clientsUL.innerHTML = clientsHtml;
         console.log(clients);
+    });
+
+    messageForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (messageInput.value.trim().length <= 0) return;
+        console.log({ id: 'YO!!', message: messageInput.value });
+        // Para emitir un evento
+        socket.emit('message-from-client', { id: 'YO!!', message: messageInput.value });
+        messageInput.value = '';
     });
 
 }
