@@ -1,5 +1,7 @@
 import { Manager, Socket } from 'socket.io-client'
 
+let socket: Socket;
+
 export const connectToServer = ( token: string ) => {
 
     const manager = new Manager('http://localhost:3000/socket.io/socket.io',{
@@ -9,14 +11,15 @@ export const connectToServer = ( token: string ) => {
         }
     });
 
-    const socket = manager.socket('/');
+    socket?.removeAllListeners(); // Si existe el socket, remueve todos los listeners
+    socket = manager.socket('/');
 
     // console.log(socket);
-    addListener(socket);
+    addListener();
     
 }
 
-const addListener = (socket:Socket) => {
+const addListener = () => {
 
     const serverStatusLabel = document.querySelector<HTMLSpanElement>('#server-status')!;
     const clientsUL = document.querySelector('#clients-ul')!;
@@ -67,5 +70,4 @@ const addListener = (socket:Socket) => {
         li.innerHTML = newMessage;
         messagesul.append(li);
     });
-
 }
